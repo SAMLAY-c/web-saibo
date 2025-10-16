@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}消息列表 - Flask Web 应用{% endblock %}
+
+{% block header_title %}📨 收到的消息{% endblock %}
+
+{% block content %}
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+        <h3>📋 消息管理中心</h3>
+        <p>这里显示所有通过联系表单提交的消息，按时间倒序排列（最新的在前面）。</p>
+        <p><strong>总计消息数：</strong> {{ messages|length }}</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="background: white; border: 1px solid #dee2e6; border-radius: 5px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                    <div>
+                        <h4 style="margin: 0; color: #007bff;">
+                            {{ message.name }}
+                        </h4>
+                        <p style="margin: 5px 0; color: #6c757d; font-size: 14px;">
+                            📧 {{ message.email }}
+                        </p>
+                    </div>
+                    <div style="text-align: right; color: #6c757d; font-size: 12px;">
+                        <strong>消息ID:</strong> {{ message.id }}<br>
+                        <strong>提交时间:</strong><br>
+                        {{ message.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                    </div>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 3px; border-left: 4px solid #007bff;">
+                    <h5 style="margin: 0 0 10px 0; color: #495057;">消息内容：</h5>
+                    <p style="margin: 0; line-height: 1.6; white-space: pre-wrap;">{{ message.message }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div style="background: #fff3cd; color: #856404; padding: 20px; border-radius: 5px; border: 1px solid #ffeaa7; text-align: center;">
+            <h4>📭 暂无消息</h4>
+            <p>还没有收到任何联系消息。当有人通过联系表单提交消息时，它们会在这里显示。</p>
+            <p style="margin-top: 15px;">
+                <a href="{{ url_for('contact') }}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                    📝 前往联系页面
+                </a>
+            </p>
+        </div>
+    {% endif %}
+
+    <div style="background: #e8f4fd; padding: 20px; border-radius: 5px; margin-top: 30px;">
+        <h4>💾 数据库操作说明</h4>
+        <div style="background: white; padding: 15px; border-radius: 3px; margin-top: 10px;">
+            <h5>🔧 当前实现的功能：</h5>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>创建 (Create)</strong>: 通过联系表单提交消息时自动保存到数据库</li>
+                <li><strong>读取 (Read)</strong>: 在此页面显示所有已保存的消息</li>
+                <li><strong>排序</strong>: 消息按提交时间倒序排列（最新的在前）</li>
+                <li><strong>数据验证</strong>: 使用Flask-WTF进行表单验证</li>
+                <li><strong>安全性</strong>: 包含CSRF保护和SQL注入防护</li>
+            </ul>
+
+            <h5 style="margin-top: 15px;">📊 数据库模型结构：</h5>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>id</strong>: 主键，自动递增</li>
+                <li><strong>name</strong>: 提交者姓名（最大80字符）</li>
+                <li><strong>email</strong>: 提交者邮箱（最大120字符）</li>
+                <li><strong>message</strong>: 消息内容（文本类型）</li>
+                <li><strong>created_at</strong>: 创建时间（自动设置为当前时间）</li>
+            </ul>
+
+            <h5 style="margin-top: 15px;">🚀 下一步可以扩展的功能：</h5>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>更新 (Update)</strong>: 编辑已提交的消息</li>
+                <li><strong>删除 (Delete)</strong>: 删除不需要的消息</li>
+                <li><strong>搜索</strong>: 按姓名、邮箱或内容搜索消息</li>
+                <li><strong>分页</strong>: 当消息很多时进行分页显示</li>
+                <li><strong>标记</strong>: 标记消息为已读/未读状态</li>
+                <li><strong>回复</strong>: 直接回复消息功能</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('home') }}" style="color: #6c757d; text-decoration: none;">
+            ← 返回主页
+        </a>
+    </div>
+{% endblock %}

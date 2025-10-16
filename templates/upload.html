@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}文件上传 - Flask Web 应用{% endblock %}
+
+{% block header_title %}文件上传功能演示{% endblock %}
+
+{% block content %}
+    <div style="background: #e8f4fd; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+        <h3>📁 Flask 文件上传功能</h3>
+        <p>这个页面演示了如何使用 Flask 处理文件上传。支持多种文件类型，并包含完整的安全验证。</p>
+    </div>
+
+    <!-- Flash 消息显示 -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+        <h4>📋 支持的文件类型</h4>
+        <p>我们支持以下文件类型的上传：</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 15px;">
+            <div style="background: white; padding: 10px; border-radius: 3px; text-align: center; border: 1px solid #dee2e6;">
+                <strong>📄 文档</strong><br>
+                txt, pdf, doc, docx
+            </div>
+            <div style="background: white; padding: 10px; border-radius: 3px; text-align: center; border: 1px solid #dee2e6;">
+                <strong>🖼️ 图片</strong><br>
+                png, jpg, jpeg, gif
+            </div>
+            <div style="background: white; padding: 10px; border-radius: 3px; text-align: center; border: 1px solid #dee2e6;">
+                <strong>📊 表格</strong><br>
+                xls, xlsx
+            </div>
+        </div>
+    </div>
+
+    <div style="background: white; padding: 30px; border-radius: 5px; border: 1px solid #dee2e6; margin-bottom: 20px;">
+        <h4>🚀 上传文件</h4>
+        <form method="POST" enctype="multipart/form-data" style="margin-top: 20px;">
+            <div style="margin-bottom: 20px;">
+                <label for="file_to_upload" style="display: block; margin-bottom: 8px; font-weight: bold;">
+                    选择要上传的文件：
+                </label>
+                <input type="file"
+                       name="file_to_upload"
+                       id="file_to_upload"
+                       style="width: 100%; padding: 10px; border: 2px dashed #007bff; border-radius: 5px; background: #f8f9fa;"
+                       accept=".txt,.pdf,.png,.jpg,.jpeg,.gif,.doc,.docx,.xls,.xlsx">
+            </div>
+
+            <button type="submit"
+                    style="background: #007bff; color: white; padding: 12px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                📤 上传文件
+            </button>
+        </form>
+    </div>
+
+    <div style="background: #fff3cd; padding: 20px; border-radius: 5px; margin-bottom: 20px;">
+        <h4>💡 上传功能说明</h4>
+        <div style="margin-top: 15px;">
+            <h5>🔒 安全特性：</h5>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>文件类型验证</strong>：只允许预设的安全文件类型</li>
+                <li><strong>文件名清理</strong>：使用 Werkzeug 的 secure_filename() 清理文件名</li>
+                <li><strong>存储路径安全</strong>：文件保存在指定的 uploads 文件夹中</li>
+                <li><strong>错误处理</strong>：完整的错误提示和异常处理</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h5>📝 使用步骤：</h5>
+            <ol style="margin: 10px 0; padding-left: 20px;">
+                <li>点击"选择文件"按钮选择要上传的文件</li>
+                <li>确认文件类型在支持的范围内</li>
+                <li>点击"上传文件"按钮提交</li>
+                <li>等待上传完成，查看结果消息</li>
+                <li>上传成功的文件将保存在 <code>uploads</code> 文件夹中</li>
+            </ol>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h5>⚠️ 注意事项：</h5>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li>文件大小限制：建议不要上传超过 10MB 的文件</li>
+                <li>文件名：系统会自动处理特殊字符，确保文件名安全</li>
+                <li>重复文件：如果上传同名文件，新文件会覆盖旧文件</li>
+                <li>隐私安全：请不要上传包含敏感信息的文件</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="background: #d1ecf1; padding: 20px; border-radius: 5px;">
+        <h4>🛠️ 技术实现要点</h4>
+        <div style="margin-top: 15px;">
+            <h5>后端关键技术：</h5>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>request.files</strong>：获取上传的文件对象</li>
+                <li><strong>secure_filename()</strong>：清理文件名中的危险字符</li>
+                <li><strong>file.save()</strong>：将文件保存到指定路径</li>
+                <li><strong>enctype="multipart/form-data"</strong>：表单必须设置此属性</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 15px;">
+            <h5>前端表单要求：</h5>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>method="POST"</strong>：文件上传必须使用 POST 方法</li>
+                <li><strong>enctype="multipart/form-data"</strong>：支持文件传输的编码类型</li>
+                <li><strong>input type="file"</strong>：文件选择输入框</li>
+                <li><strong>name 属性</strong>：后端通过 name 属性获取文件</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

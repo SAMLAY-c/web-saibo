@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>登录失败</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>登录失败</h1>
+        <nav>
+            <a href="/">主页</a>
+            <a href="/about">关于我</a>
+            <a href="/login">重新登录</a>
+        </nav>
+    </header>
+
+    <main>
+        <div style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 5px; border: 1px solid #f5c6cb; margin-bottom: 20px;">
+            <h2>❌ 登录失败</h2>
+            <p>用户名 "<strong>{{ username }}</strong>" 的登录信息不正确。</p>
+        </div>
+
+        <div style="background: #fff3cd; padding: 20px; border-radius: 5px; border: 1px solid #ffeaa7;">
+            <h3>🔍 调试信息</h3>
+            <p>这是你提交的数据：</p>
+            <ul>
+                <li><strong>用户名:</strong> {{ username }}</li>
+                <li><strong>状态:</strong> 登录失败</li>
+            </ul>
+
+            <h4>📚 学习要点：</h4>
+            <ul>
+                <li>表单数据通过 <code>request.form</code> 获取</li>
+                <li>每个输入框的值通过 <code>name</code> 属性识别</li>
+                <li>服务器根据提交的数据进行逻辑判断</li>
+                <li>失败后可以重定向到错误页面并传递参数</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h3>💡 正确的登录方式：</h3>
+            <ul>
+                <li><strong>管理员账号:</strong> 用户名 <code>admin</code>，密码 <code>123456</code></li>
+                <li><strong>访客账号:</strong> 任意用户名，密码 <code>guest</code></li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="/login" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                🔙 返回登录页面
+            </a>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - Flask Web 应用{% endblock %}
+
+{% block header_title %}欢迎来到我的网站！{% endblock %}
+
+{% block content %}
+    <!-- 使用 Jinja2 的 if 语句根据登录状态显示不同内容 -->
+    {% if session.username %}
+        <div style="background: #d4edda; color: #155724; padding: 20px; border-radius: 5px; border: 1px solid #c3e6cb; margin-bottom: 20px;">
+            <h2>🎉 欢迎回来, {{ session.username }}!</h2>
+            <p>你已经成功登录。现在你可以享受网站的完整功能。</p>
+            <p><strong>登录状态:</strong> <span style="color: #28a745;">✅ 已登录</span></p>
+            <p><strong>用户角色:</strong>
+                {% if session.user_role == 'admin' %}
+                    <span style="color: #dc3545;">👑 管理员</span>
+                {% else %}
+                    <span style="color: #007bff;">👤 访客</span>
+                {% endif %}
+            </p>
+        </div>
+    {% else %}
+        <div style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 5px; border: 1px solid #f5c6cb; margin-bottom: 20px;">
+            <h2>🔐 您尚未登录</h2>
+            <p>请登录以享受网站的完整功能。</p>
+            <p><strong>登录状态:</strong> <span style="color: #dc3545;">❌ 未登录</span></p>
+            <p style="margin-top: 15px;">
+                <a href="{{ url_for('login') }}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                    🚪 点击这里登录
+                </a>
+            </p>
+        </div>
+    {% endif %}
+
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin-top: 20px;">
+        <h3>🎯 Session 功能演示</h3>
+        <p>Flask 的 Session 技术让服务器能够"记住"用户的登录状态：</p>
+
+        <div style="background: #e8f4fd; padding: 15px; border-radius: 3px; margin-top: 15px;">
+            <h4>💡 工作原理：</h4>
+            <ol style="margin: 0; padding-left: 20px;">
+                <li><strong>登录时</strong>: 服务器在 Session 中存储用户信息</li>
+                <li><strong>访问其他页面</strong>: 服务器检查 Session 确认用户身份</li>
+                <li><strong>注销时</strong>: 服务器清除 Session 中的用户信息</li>
+                <li><strong>安全性</strong>: Session 数据存储在服务器端，非常安全</li>
+            </ol>
+        </div>
+
+        <div style="background: #fff3cd; padding: 15px; border-radius: 3px; margin-top: 15px;">
+            <h4>🧪 测试步骤：</h4>
+            <ol style="margin: 0; padding-left: 20px;">
+                <li>当前状态：{% if session.username %}<strong>已登录为 {{ session.username }}</strong>{% else %}<strong>未登录</strong>{% endif %}</li>
+                {% if session.username %}
+                <li>点击上方导航栏的"注销"链接</li>
+                <li>观察页面显示状态变化和消息提示</li>
+                {% else %}
+                <li>点击登录链接进入登录页面</li>
+                <li>使用管理员账号：<code>admin</code> / <code>123456</code></li>
+                <li>或使用访客账号：任意用户名 / <code>guest</code></li>
+                <li>观察登录后返回主页时的状态变化和消息提示</li>
+                {% endif %}
+            </ol>
+        </div>
+    </div>
+
+    <div style="background: #e8f4fd; padding: 20px; border-radius: 5px; margin-top: 20px;">
+        <h3>✨ 消息闪现功能演示</h3>
+        <p>Flask 的消息闪现功能让你能够向用户显示一次性的通知消息：</p>
+
+        <div style="background: #d1ecf1; padding: 15px; border-radius: 3px; margin-top: 15px;">
+            <h4>🎨 消息类型：</h4>
+            <ul style="margin: 0; padding-left: 20px;">
+                <li><strong>Success (绿色)</strong>: 登录成功、操作完成等正面反馈</li>
+                <li><strong>Error (红色)</strong>: 登录失败、验证错误等错误提示</li>
+                <li><strong>Info (蓝色)</strong>: 注销成功、一般信息提示</li>
+            </ul>
+        </div>
+
+        <div style="background: #fff3cd; padding: 15px; border-radius: 3px; margin-top: 15px;">
+            <h4>🔄 一次性特性：</h4>
+            <p>消息闪现的"一次性"特性意味着：</p>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li>消息只在显示一次后自动消失</li>
+                <li>刷新页面后消息不会再次显示</li>
+                <li>用户必须重新触发操作才能看到相同的消息</li>
+                <li>这避免了重复显示相同的提示信息</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>AJAX Demo - Flask Web 应用</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .demo-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+
+        .button-container {
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-hello {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-hello:hover {
+            background: #218838;
+        }
+
+        .btn-goodbye {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-goodbye:hover {
+            background: #c82333;
+        }
+
+        .btn-reset {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #5a6268;
+        }
+
+        .test-links {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #dee2e6;
+        }
+
+        .test-links a {
+            margin-right: 15px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .test-links a:hover {
+            text-decoration: underline;
+        }
+
+        .status-display {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f4fd;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+
+        .response-log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: none;
+            color: #007bff;
+            font-style: italic;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 AJAX 交互演示</h1>
+
+    <div class="demo-section">
+        <h3>📖 什么是AJAX？</h3>
+        <p><strong>AJAX (Asynchronous JavaScript and XML)</strong> 是一种前端技术，允许浏览器在<strong>不重新加载整个网页</strong>的情况下与服务器进行数据交换。</p>
+        <p>这创造了流畅、快速、响应灵敏的用户体验，让你的网页感觉更像桌面应用程序。</p>
+    </div>
+
+    <div class="demo-section">
+        <h3>🎮 交互演示</h3>
+        <p>点击下面的按钮，观察页面变化（<strong>页面不会刷新</strong>）：</p>
+
+        <div class="button-container">
+            <button class="btn btn-hello" onclick="sayHello()">👋 呼叫 Hello</button>
+            <button class="btn btn-goodbye" onclick="sayGoodbye()">👋 呼叫 Goodbye</button>
+            <button class="btn btn-reset" onclick="resetStyles()">🔄 重置样式</button>
+        </div>
+
+        <div class="loading" id="loading">正在处理请求...</div>
+        <div class="success-message" id="successMessage"></div>
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+
+    <div class="test-links">
+        <h4>🔗 测试链接（用于观察颜色变化）</h4>
+        <a href="#">链接1</a>
+        <a href="#">链接2</a>
+        <a href="#">链接3</a>
+        <a href="#">Flask主页</a>
+        <a href="#">GitHub</a>
+    </div>
+
+    <div class="status-display">
+        <h4>📊 请求状态监控</h4>
+        <div>
+            <strong>最后操作:</strong> <span id="lastAction">等待操作...</span><br>
+            <strong>链接颜色:</strong> <span id="linkColor">默认（蓝色）</span><br>
+            <strong>AJAX请求数:</strong> <span id="requestCount">0</span>
+        </div>
+
+        <div class="response-log" id="responseLog">
+            <strong>响应日志:</strong><br>
+            <div id="logContent">等待第一次AJAX请求...</div>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h3>🛠️ 技术实现原理</h3>
+        <div style="background: white; padding: 15px; border-radius: 3px;">
+            <h4>后端实现 (Flask):</h4>
+            <ul>
+                <li><strong>路由定义</strong>: <code>@app.route('/ajax/say-hello', methods=['POST'])</code></li>
+                <li><strong>JSON响应</strong>: 使用 <code>jsonify()</code> 返回结构化数据</li>
+                <li><strong>数据处理</strong>: 接收前端发送的JSON数据并处理</li>
+            </ul>
+
+            <h4>前端实现 (JavaScript):</h4>
+            <ul>
+                <li><strong>fetch API</strong>: 现代JavaScript的AJAX实现方式</li>
+                <li><strong>异步处理</strong>: 使用 <code>async/await</code> 处理异步请求</li>
+                <li><strong>DOM操作</strong>: 动态更新页面内容，无需刷新</li>
+                <li><strong>CSS操作</strong>: 动态改变页面元素样式</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{{ url_for('home') }}" style="color: #6c757d; text-decoration: none;">
+            ← 返回主页
+        </a>
+    </div>
+
+    <script>
+        // 请求计数器
+        let requestCount = 0;
+
+        // 更新响应日志
+        function updateLog(message) {
+            const logContent = document.getElementById('logContent');
+            const timestamp = new Date().toLocaleTimeString();
+            logContent.innerHTML = `[${timestamp}] ${message}<br>` + logContent.innerHTML;
+        }
+
+        // 显示加载状态
+        function showLoading(show = true) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // 显示成功消息
+        function showSuccess(message) {
+            const successEl = document.getElementById('successMessage');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            setTimeout(() => {
+                successEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // 显示错误消息
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // AJAX函数 - sayHello
+        async function sayHello() {
+            showLoading(true);
+            requestCount++;
+
+            try {
+                const response = await fetch('/ajax/say-hello', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: '张三',
+                        lastname: '李四'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // 显示弹窗
+                    alert(data.message);
+
+                    // 改变所有链接颜色为绿色
+                    const links = document.querySelectorAll('.test-links a');
+                    links.forEach(link => {
+                        link.style.color = '#28a745';
+                    });
+
+                    // 更新状态显示
+                    document.getElementById('lastAction').textContent = '呼叫 Hello 成功';
+                    document.getElementById('linkColor').textContent = '绿色';
+                    document.getElementById('requestCount').textContent = requestCount;
+
+                    // 更新日志
+                    updateLog(`Hello请求成功: ${data.message}, 操作: ${data.action}`);
+
+                    // 显示成功消息
+                    showSuccess('✅ Hello操作执行成功！');
+                } else {
+                    throw new Error('请求失败');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                updateLog(`Hello请求失败: ${error.message}`);
+                showError('❌ Hello请求失败，请检查网络连接');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // AJAX函数 - sayGoodbye
+        async function sayGoodbye() {
+            showLoading(true);
+            requestCount++;
+
+            try {
+                const response = await fetch('/ajax/say-goodbye', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // 显示弹窗
+                    alert(data.message);
+
+                    // 改变所有链接颜色为红色
+                    const links = document.querySelectorAll('.test-links a');
+                    links.forEach(link => {
+                        link.style.color = '#dc3545';
+                    });
+
+                    // 更新状态显示
+                    document.getElementById('lastAction').textContent = '呼叫 Goodbye 成功';
+                    document.getElementById('linkColor').textContent = '红色';
+                    document.getElementById('requestCount').textContent = requestCount;
+
+                    // 更新日志
+                    updateLog(`Goodbye请求成功: ${data.message}, 操作: ${data.action}`);
+
+                    // 显示成功消息
+                    showSuccess('✅ Goodbye操作执行成功！');
+                } else {
+                    throw new Error('请求失败');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                updateLog(`Goodbye请求失败: ${error.message}`);
+                showError('❌ Goodbye请求失败，请检查网络连接');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 重置样式
+        function resetStyles() {
+            const links = document.querySelectorAll('.test-links a');
+            links.forEach(link => {
+                link.style.color = '#007bff';
+            });
+
+            document.getElementById('lastAction').textContent = '样式已重置';
+            document.getElementById('linkColor').textContent = '默认（蓝色）';
+
+            updateLog('样式重置为默认状态');
+            showSuccess('✅ 样式重置成功！');
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLog('页面加载完成，AJAX功能已准备就绪');
+        });
+    </script>
+</body>
+</html>

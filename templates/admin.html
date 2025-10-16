@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员面板</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>管理员面板</h1>
+        <nav>
+            <a href="/">主页</a>
+            <a href="/about">关于我</a>
+            <a href="/profile/admin">我的资料</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>你好, 管理员! 👑</h2>
+        <p>欢迎来到管理员专属页面！</p>
+        <div style="background: #e8f5e8; padding: 15px; border-radius: 5px; margin-top: 20px;">
+            <h3>🔐 管理员功能</h3>
+            <ul>
+                <li>用户管理</li>
+                <li>系统设置</li>
+                <li>数据分析</li>
+                <li>内容审核</li>
+            </ul>
+        </div>
+        <p style="margin-top: 20px;">
+            <a href="/profile/张三">切换到访客视图</a> |
+            <a href="/">返回主页</a>
+        </p>
+    </main>
+</body>
+</html>

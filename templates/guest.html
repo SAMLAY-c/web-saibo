@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>访客页面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>访客页面</h1>
+        <nav>
+            <a href="/">主页</a>
+            <a href="/about">关于我</a>
+            <a href="/profile/{{ guest_name }}">我的资料</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>你好 {{ guest_name }}, 你是访客! 👋</h2>
+        <p>欢迎来到访客页面！</p>
+        <div style="background: #e8f4f8; padding: 15px; border-radius: 5px; margin-top: 20px;">
+            <h3>👤 访客信息</h3>
+            <ul>
+                <li><strong>姓名:</strong> {{ guest_name }}</li>
+                <li><strong>身份:</strong> 访客</li>
+                <li><strong>权限:</strong> 基础访问权限</li>
+                <li><strong>注册时间:</strong> 2024年</li>
+            </ul>
+        </div>
+        <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin-top: 20px;">
+            <h3>🎯 访客可以做什么</h3>
+            <ul>
+                <li>浏览公开内容</li>
+                <li>查看个人信息</li>
+                <li>发表评论</li>
+                <li>参与社区互动</li>
+            </ul>
+        </div>
+        <p style="margin-top: 20px;">
+            <a href="/profile/admin">切换到管理员视图</a> |
+            <a href="/">返回主页</a>
+        </p>
+    </main>
+</body>
+</html>

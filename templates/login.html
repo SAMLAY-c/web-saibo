@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}用户登录 - Flask Web 应用{% endblock %}
+
+{% block header_title %}用户登录系统{% endblock %}
+
+{% block content %}
+    <div style="max-width: 500px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <h2 style="text-align: center; margin-bottom: 30px;">🔐 用户登录</h2>
+
+        <div style="background: #e8f4fd; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            <p><strong>📚 消息闪现演示：</strong></p>
+            <p>登录成功后，你会在重定向到首页时看到一条欢迎消息。如果登录失败，你会看到错误提示消息。</p>
+        </div>
+
+        <!-- 这是一个HTML表单 -->
+        <!-- action="/login" 表示表单提交到 /login 这个URL -->
+        <!-- method="post" 表示使用 POST 方法提交 -->
+        <form action="{{ url_for('login') }}" method="post">
+            <div style="margin-bottom: 15px;">
+                <label for="username" style="display: block; margin-bottom: 5px; font-weight: bold;">用户名:</label>
+                <input type="text" id="username" name="username" required
+                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;"
+                       placeholder="请输入用户名" />
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="password" style="display: block; margin-bottom: 5px; font-weight: bold;">密码:</label>
+                <input type="password" id="password" name="password" required
+                       style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;"
+                       placeholder="请输入密码" />
+            </div>
+
+            <button type="submit"
+                    style="width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;">
+                登录
+            </button>
+        </form>
+
+        <div style="background: #e8f5e8; padding: 15px; border-radius: 5px; margin-top: 20px; font-size: 14px;">
+            <strong>🧪 测试账号：</strong><br>
+            管理员：用户名 <code>admin</code>，密码 <code>123456</code><br>
+            访客：任意用户名，密码 <code>guest</code>
+        </div>
+
+        <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin-top: 15px;">
+            <h4>💡 消息闪现工作流程：</h4>
+            <ol style="margin: 0; padding-left: 20px; font-size: 14px;">
+                <li>你提交表单 → 服务器验证登录信息</li>
+                <li>服务器调用 <code>flash()</code> 存储消息</li>
+                <li>服务器重定向到目标页面</li>
+                <li>目标页面使用 <code>get_flashed_messages()</code> 获取消息</li>
+                <li>消息显示一次后自动清除</li>
+            </ol>
+        </div>
+    </div>
+{% endblock %}

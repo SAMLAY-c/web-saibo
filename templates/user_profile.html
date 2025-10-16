@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户资料</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>用户资料页面</h1>
+        <nav>
+            <a href="/">返回主页</a>
+        </nav>
+    </header>
+    <main>
+        <!-- {{ name }} 会被 app.py 中传递过来的值替换掉 -->
+        <h2>你好, {{ name }}!</h2>
+        <p>这是你的个人资料展示页。</p>
+    </main>
+</body>
+</html>
