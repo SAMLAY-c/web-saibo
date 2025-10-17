@@ -4,27 +4,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a comprehensive Flask web application demonstrating modern web development techniques including form handling, file uploads, database operations, AJAX interactions, and user session management. The project serves as both a learning resource and a solid foundation for building production web applications.
+This is a CPA (Certified Public Accountant) learning platform with a cyberpunk-themed glassmorphism design. The application demonstrates modern web development techniques including form handling, file uploads, database operations, AJAX interactions, user session management, and an interactive flashcard learning system. The platform serves as both a learning tool for CPA students and a showcase of advanced Flask development techniques.
 
 ## Development Commands
 
 ### Setup and Installation
 ```bash
-# Create and activate virtual environment
+# Create and activate virtual environment (if not exists)
 python3 -m venv venv
 source venv/bin/activate
 
 # Install dependencies
 pip install flask flask-sqlalchemy flask-wtf wtforms email_validator werkzeug
 
-# For development, the above packages are sufficient
-# The project currently doesn't have a requirements.txt file
+# The project uses venv/ for dependency isolation
 ```
 
 ### Running the Application
 ```bash
 # Navigate to project directory and run with virtual environment
-cd my_website
+cd /path/to/cpa
 source venv/bin/activate
 python app.py
 
@@ -55,11 +54,25 @@ curl -X POST http://127.0.0.1:9250/ajax/say-hello \
 
 ## Architecture and Code Structure
 
+### Template System Architecture
+The project uses a dual-template system:
+
+**Cyberpunk Templates (Primary - Current Active):**
+- **`templates/home_cyber.html`**: Main landing page with cyberpunk design
+- **`templates/login_cyber.html`**: Modern login interface with glassmorphism
+- **`templates/contact_cyber.html`**: Professional contact page with FAQ
+- **`templates/about_cyber.html`**: Company/product introduction page
+- **`templates/cpa_learning.html`**: CPA subject dashboard with progress tracking
+- **`templates/flashcards.html`**: Interactive 3D flip card learning system
+
+**Legacy Templates (Secondary - Original Tutorial Content):**
+- **`templates/index.html`**, **`templates/login.html`**, etc. - Original tutorial templates
+
 ### Core Application Structure
 - **`app.py`**: Main Flask application with all routes, database models, and core logic
 - **`forms.py`**: Flask-WTF form definitions for contact form handling
-- **`templates/`**: Jinja2 templates with inheritance structure
-- **`static/css/`**: Custom CSS styling
+- **`static/css/cyberpunk.css`**: Comprehensive cyberpunk design system
+- **`static/css/style.css`**: Original basic CSS styling
 - **`uploads/`**: File upload storage directory
 - **`messages.db`**: SQLite database file (auto-generated)
 
@@ -75,29 +88,49 @@ class Contact(db.Model):
 ```
 
 ### Template Architecture
-- **`base.html`**: Master template with navigation and flash message system
-- **Child templates**: Extend base.html for specific pages
-- **Flash messages**: Implemented with categories (success, error, info)
-- **Template inheritance**: Consistent layout across all pages
+- **`base.html`**: Legacy master template with navigation and flash message system
+- **Cyberpunk templates**: Self-contained templates with inline cyberpunk styling
+- **Flash messages**: Implemented with categories (success, error, info) - works across both template systems
+- **Template inheritance**: Legacy templates use base.html, cyberpunk templates are standalone
 
 ### Route Structure
 The application implements a comprehensive set of routes:
 
-**Public Routes:**
-- `/` - Home page with session-based content
-- `/about` - About page
-- `/contact` - Contact form (GET/POST)
-- `/messages` - Message list display
+**Primary CPA Learning Routes (Cyberpunk Templates):**
+- `/` - Home page (uses `home_cyber.html`)
+- `/about` - About page (uses `about_cyber.html`)
+- `/contact` - Contact form (uses `contact_cyber.html`)
+- `/login` - User login (uses `login_cyber.html`)
+- `/cpa-learning` - CPA subject dashboard (uses `cpa_learning.html`)
+- `/flashcards` - Interactive flashcard system (uses `flashcards.html`)
+
+**Legacy Demo Routes:**
+- `/messages` - Message list display (original functionality)
 - `/upload` - File upload functionality
 - `/ajax-demo` - AJAX demonstration page
-- `/login` - User login (GET/POST)
 - `/logout` - User logout
+- `/user/<username>` - User profile demo
+- `/admin` - Admin dashboard demo
+- `/guest/<guest>` - Guest welcome demo
 
 **AJAX Endpoints:**
 - `/ajax/say-hello` - POST endpoint for AJAX hello functionality
 - `/ajax/say-goodbye` - POST endpoint for AJAX goodbye functionality
 
 ### Key Technical Features
+
+#### Cyberpunk Design System
+- **CSS Custom Properties**: Comprehensive color system with neon gradients
+- **Glassmorphism Effects**: backdrop-filter blur and transparency
+- **Neon Animations**: Pulsing borders and glowing text effects
+- **Responsive Design**: Mobile-first approach with CSS Grid and Flexbox
+
+#### Flashcard Learning System
+- **3D Card Flips**: CSS transform-based card rotations
+- **Touch Gesture Support**: Swipe navigation for mobile devices
+- **Keyboard Navigation**: Arrow keys and spacebar controls
+- **Progress Tracking**: Visual progress bars and completion metrics
+- **Difficulty Filtering**: Dynamic content filtering by difficulty level
 
 #### Form Handling
 - Flask-WTF integration with CSRF protection
@@ -157,17 +190,24 @@ The project uses Python virtual environment (`venv/`) for dependency isolation. 
 - Modular template design with inheritance
 - Static asset organization
 
-### Common Development Patterns
+### Development Patterns
 
-#### Adding New Routes
-1. Define route function in `app.py`
-2. Create corresponding template in `templates/`
-3. Add navigation link in `base.html`
-4. Implement form handling if needed
+#### Adding New Cyberpunk Pages
+1. Create new template in `templates/` with `_cyber.html` suffix
+2. Include cyberpunk CSS: `<link rel="stylesheet" href="{{ url_for('static', filename='css/cyberpunk.css') }}">`
+3. Define route function in `app.py` pointing to the new template
+4. Use glass-container class for main content areas
+5. Apply neon-border class for interactive elements
+
+#### Extending Flashcard System
+1. Add new flashcard data to JavaScript arrays in `templates/flashcards.html`
+2. Update category filtering logic
+3. Add new progress tracking metrics
+4. Implement new animation effects using CSS transforms
 
 #### Database Model Extensions
 1. Define new model class in `app.py`
-2. Run database initialization
+2. Run database initialization (automatic on app restart)
 3. Update forms and templates accordingly
 4. Implement CRUD operations as needed
 
@@ -177,4 +217,10 @@ The project uses Python virtual environment (`venv/`) for dependency isolation. 
 3. Implement JavaScript client-side logic
 4. Add error handling and user feedback
 
-This project provides a solid foundation for Flask development with modern best practices and comprehensive feature coverage.
+#### Customizing Cyberpunk Theme
+1. Modify CSS custom properties in `static/css/cyberpunk.css`
+2. Update neon color variables for different themes
+3. Adjust glassmorphism parameters for visual effects
+4. Add new animation keyframes for interactive elements
+
+This project provides a solid foundation for modern Flask development with advanced UI design and comprehensive feature coverage.
