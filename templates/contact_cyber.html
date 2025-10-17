@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我们 - CPA学习平台</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cyberpunk.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .contact-info {
+            padding: 2rem;
+        }
+
+        .contact-form {
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-neon-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contact-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-neon-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-size: 1.2rem;
+        }
+
+        .contact-details h4 {
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .contact-details p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-label span {
+            color: #ff4757;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .error-message {
+            color: #ff4757;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--gradient-neon-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-neon);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .working-hours {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+        }
+
+        .working-hours h4 {
+            color: var(--neon-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .working-hours p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--gradient-neon-primary);
+            color: var(--bg-primary);
+            transform: translateY(-3px);
+        }
+
+        .faq-section {
+            margin-top: 3rem;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-question:hover {
+            border-color: var(--neon-cyan);
+        }
+
+        .faq-answer {
+            padding: 1rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem 1rem;
+            }
+
+            .contact-form {
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <nav>
+            <div class="glass-container neon-border">
+                <a href="{{ url_for('home') }}">
+                    <i class="fas fa-home"></i> 首页
+                </a>
+                <a href="{{ url_for('cpa_learning') }}">
+                    <i class="fas fa-graduation-cap"></i> CPA学习
+                </a>
+                <a href="{{ url_for('flashcards') }}">
+                    <i class="fas fa-clone"></i> 知识闪卡
+                </a>
+                <a href="{{ url_for('contact') }}" class="active">
+                    <i class="fas fa-envelope"></i> 联系我们
+                </a>
+                <a href="{{ url_for('about') }}">
+                    <i class="fas fa-info-circle"></i> 关于
+                </a>
+                {% if session.username %}
+                    <a href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> 注销
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- 消息闪现区域 -->
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-{{ category }} glass-container">
+                <div class="flash-message">
+                  <span>{{ message }}</span>
+                  <button class="flash-close" onclick="this.parentElement.parentElement.style.display='none'">&times;</button>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="main-container">
+        <div class="contact-container">
+            <!-- 联系信息 -->
+            <div class="contact-info">
+                <h1 class="section-title">联系我们</h1>
+                <p class="contact-description">
+                    我们始终致力于为您提供最优质的CPA学习体验。无论您有任何问题、建议或需要支持，我们的团队都随时准备为您提供帮助。
+                </p>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>邮箱支持</h4>
+                        <p>support@cpa-learning.com</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>电话支持</h4>
+                        <p>400-123-4567</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>在线客服</h4>
+                        <p>工作日 9:00-18:00</p>
+                    </div>
+                </div>
+
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="contact-details">
+                        <h4>办公地址</h4>
+                        <p>北京市朝阳区CBD中心</p>
+                    </div>
+                </div>
+
+                <div class="working-hours">
+                    <h4><i class="fas fa-clock"></i> 工作时间</h4>
+                    <p>周一至周五：9:00 - 18:00</p>
+                    <p>周六周日：10:00 - 16:00</p>
+                    <p>节假日：在线客服正常运营</p>
+                </div>
+
+                <div class="social-links">
+                    <a href="#" class="social-link" title="微信">
+                        <i class="fab fa-weixin"></i>
+                    </a>
+                    <a href="#" class="social-link" title="微博">
+                        <i class="fab fa-weibo"></i>
+                    </a>
+                    <a href="#" class="social-link" title="QQ">
+                        <i class="fab fa-qq"></i>
+                    </a>
+                    <a href="#" class="social-link" title="知乎">
+                        <i class="fab fa-zhihu"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 联系表单 -->
+            <div class="contact-form glass-container neon-border">
+                <h2 class="section-title">发送消息</h2>
+                <p class="contact-description">
+                    请填写下面的表单，我们会在24小时内回复您的消息。
+                </p>
+
+                <form method="POST" action="{{ url_for('contact') }}" id="contactForm">
+                    {{ form.hidden_tag() }}
+
+                    <div class="form-group">
+                        <label for="name" class="form-label">
+                            姓名 <span>*</span>
+                        </label>
+                        {{ form.name(class="form-input", placeholder="请输入您的姓名") }}
+                        {% if form.name.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {% for error in form.name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">
+                            邮箱 <span>*</span>
+                        </label>
+                        {{ form.email(class="form-input", placeholder="请输入您的邮箱地址") }}
+                        {% if form.email.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {% for error in form.email.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject" class="form-label">
+                            主题
+                        </label>
+                        <select name="subject" class="form-input">
+                            <option value="">请选择咨询类型</option>
+                            <option value="account">账户问题</option>
+                            <option value="learning">学习咨询</option>
+                            <option value="technical">技术支持</option>
+                            <option value="payment">付费问题</option>
+                            <option value="cooperation">合作洽谈</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message" class="form-label">
+                            消息内容 <span>*</span>
+                        </label>
+                        {{ form.message(class="form-textarea", placeholder="请详细描述您的问题或建议，我们会尽快为您处理") }}
+                        {% if form.message.errors %}
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {% for error in form.message.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span id="btnText">发送消息</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="faq-section">
+            <h2 class="section-title" style="text-align: center;">常见问题</h2>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>如何开始CPA学习？</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    注册账户后，您可以进入CPA学习中心，选择您要学习的科目，建议从会计基础开始，按照我们的学习路径循序渐进。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>学习资料多久更新一次？</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    我们会根据最新的考试大纲和政策变化，每季度更新一次学习资料，确保内容的时效性和准确性。
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFAQ(this)">
+                    <span>如何联系学习顾问？</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    您可以通过在线客服、电话或邮件联系我们的学习顾问团队，他们会为您提供个性化的学习建议和指导。
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 表单提交效果
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+
+            submitBtn.disabled = true;
+            btnText.textContent = '发送中...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span id="btnText">发送中...</span>';
+        });
+
+        // FAQ切换
+        function toggleFAQ(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('i');
+
+            answer.style.display = answer.style.display === 'block' ? 'none' : 'block';
+            icon.style.transform = answer.style.display === 'block' ? 'rotate(180deg)' : 'rotate(0)';
+        }
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactItems = document.querySelectorAll('.contact-item');
+            contactItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.6s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 200);
+            });
+
+            // 表单输入效果
+            const inputs = document.querySelectorAll('.form-input, .form-textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                });
+
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+        });
+
+        // 字符计数
+        const messageTextarea = document.querySelector('textarea[name="message"]');
+        if (messageTextarea) {
+            messageTextarea.addEventListener('input', function() {
+                const maxLength = 500;
+                const currentLength = this.value.length;
+
+                if (currentLength > maxLength) {
+                    this.value = this.value.substring(0, maxLength);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

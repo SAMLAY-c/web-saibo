@@ -48,23 +48,23 @@ def allowed_file(filename):
 
 # 3. 定义路由和视图函数
 
-# 1. 首页：根据 Session 判断登录状态
+# 1. 首页：根据 Session 判断登录状态，使用赛博朋克风格
 @app.route('/')
 def home():
     # 检查 session 字典中是否有 'username' 这个键
     if 'username' in session:
         # 如果有，说明用户已登录
         username = session['username']
-        return render_template('index.html', username=username)
+        return render_template('home_cyber.html', username=username)
     else:
         # 如果没有，说明是游客
-        return render_template('index.html')
+        return render_template('home_cyber.html')
 
-# "关于我"页面路由：当用户访问 /about 时
+# "关于我们"页面路由：使用赛博朋克风格
 @app.route('/about')
 def about():
-    # 渲染 templates/about.html 文件
-    return render_template('about.html')
+    # 渲染赛博朋克风格的关于页面
+    return render_template('about_cyber.html')
 
 # 动态路由示例：可以展示不同用户的个人资料
 @app.route('/user/<username>')
@@ -74,7 +74,7 @@ def show_user_profile(username):
 
 # ===== 表单处理示例：登录功能 =====
 
-# 2. 登录页：验证成功后，在 Session 中记录用户名
+# 2. 登录页：使用赛博朋克风格
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -101,8 +101,8 @@ def login():
             flash('❌ 用户名或密码错误！请重试。', 'error')
             # 重定向到登录页面而不是失败页面，让用户看到错误消息
             return redirect(url_for('login'))
-    # 如果是 GET 请求，显示登录页面
-    return render_template('login.html')
+    # 如果是 GET 请求，显示赛博朋克风格的登录页面
+    return render_template('login_cyber.html')
 
 # 登录失败页面
 @app.route('/login_failed/<username>')
@@ -187,7 +187,7 @@ def upload_file():
     # 如果是 GET 请求，或者上传失败后，都显示上传页面
     return render_template('upload.html')
 
-# Flask-WTF 联系表单路由
+# Flask-WTF 联系表单路由 - 使用赛博朋克风格
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
     # 实例化我们的表单类
@@ -209,12 +209,12 @@ def contact():
         print(f"收到来自 {name} ({email}) 的消息: {message}")
         print(f"消息已保存到数据库，ID: {new_contact.id}")
 
-        flash(f'🎉 感谢您的消息，{name}！我们已收到并保存到数据库中。', 'success')
+        flash(f'🎉 感谢您的消息，{name}！我们会在24小时内回复您。', 'success')
         return redirect(url_for('contact'))
 
-    # 如果是 GET 请求或验证失败，则渲染模板
+    # 如果是 GET 请求或验证失败，则渲染赛博朋克风格的联系页面
     # 如果验证失败，WTForms 会自动向 form 对象添加错误消息
-    return render_template('contact.html', form=form)
+    return render_template('contact_cyber.html', form=form)
 
 # 消息列表页面路由
 @app.route('/messages')
@@ -252,6 +252,24 @@ def ajax_say_goodbye():
         'message': 'Goodbye, whoever you are!',
         'action': 'turn_red'
     })
+
+# ===== CPA学习模块路由 =====
+
+# CPA学习主页路由
+@app.route('/cpa-learning')
+def cpa_learning():
+    # 渲染CPA学习主页
+    return render_template('cpa_learning.html')
+
+# 知识点闪卡页面路由
+@app.route('/flashcards')
+def flashcards():
+    # 获取URL参数中的科目信息
+    subject = request.args.get('subject', 'accounting')
+    mode = request.args.get('mode', 'study')
+
+    # 渲染知识点闪卡页面
+    return render_template('flashcards.html', subject=subject, mode=mode)
 
 # 4. 启动应用
 if __name__ == '__main__':

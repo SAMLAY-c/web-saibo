@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - CPA学习平台</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cyberpunk.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-neon-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: var(--gradient-neon-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .stats-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-neon-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .team-section {
+            margin: 4rem 0;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-member {
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--gradient-neon-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: var(--bg-primary);
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .member-role {
+            color: var(--neon-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .member-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .timeline-section {
+            margin: 4rem 0;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gradient-neon-primary);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding: 0 2rem;
+        }
+
+        .timeline-date {
+            background: var(--gradient-neon-primary);
+            color: var(--bg-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .timeline-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 2rem;
+            width: 20px;
+            height: 20px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            margin: 4rem 0;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-neon-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .timeline::before {
+                left: 2rem;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(odd) {
+                flex-direction: column;
+            }
+
+            .timeline-content {
+                padding-left: 4rem;
+                padding-right: 1rem;
+            }
+
+            .timeline-dot {
+                left: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <nav>
+            <div class="glass-container neon-border">
+                <a href="{{ url_for('home') }}">
+                    <i class="fas fa-home"></i> 首页
+                </a>
+                <a href="{{ url_for('cpa_learning') }}">
+                    <i class="fas fa-graduation-cap"></i> CPA学习
+                </a>
+                <a href="{{ url_for('flashcards') }}">
+                    <i class="fas fa-clone"></i> 知识闪卡
+                </a>
+                <a href="{{ url_for('about') }}" class="active">
+                    <i class="fas fa-info-circle"></i> 关于我们
+                </a>
+                <a href="{{ url_for('contact') }}">
+                    <i class="fas fa-envelope"></i> 联系我们
+                </a>
+                {% if session.username %}
+                    <a href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> 注销
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <div class="about-container">
+            <!-- 英雄区域 -->
+            <section class="hero-section">
+                <h1 class="hero-title">关于CPA学习平台</h1>
+                <p class="hero-subtitle">
+                    我们致力于为CPA考生提供最先进、最有效的学习体验，通过创新的技术和科学的学习方法，帮助每一位学员实现职业梦想。
+                </p>
+            </section>
+
+            <!-- 核心特色 -->
+            <section class="section">
+                <h2 class="section-title">我们的核心特色</h2>
+                <div class="features-grid">
+                    <div class="feature-card glass-container neon-border">
+                        <span class="feature-icon">🚀</span>
+                        <h3 class="feature-title">前沿技术</h3>
+                        <p class="feature-description">
+                            采用最新的Web技术和AI算法，为学员提供智能化、个性化的学习体验，让学习更高效、更有趣。
+                        </p>
+                    </div>
+
+                    <div class="feature-card glass-container neon-border">
+                        <span class="feature-icon">📚</span>
+                        <h3 class="feature-title">专业内容</h3>
+                        <p class="feature-description">
+                            由资深CPA讲师和教育专家团队精心打造的学习内容，紧贴考试大纲，确保学习质量和效果。
+                        </p>
+                    </div>
+
+                    <div class="feature-card glass-container neon-border">
+                        <span class="feature-icon">🎯</span>
+                        <h3 class="feature-title">精准辅导</h3>
+                        <p class="feature-description">
+                            基于大数据分析的个性化学习路径，针对每个学员的薄弱环节提供精准的辅导和练习。
+                        </p>
+                    </div>
+
+                    <div class="feature-card glass-container neon-border">
+                        <span class="feature-icon">💡</span>
+                        <h3 class="feature-title">创新方法</h3>
+                        <p class="feature-description">
+                            结合认知科学和学习心理学，采用闪卡、间隔重复等先进的学习方法，提高记忆效率。
+                        </p>
+                    </div>
+
+                    <div class="feature-card glass-container neon-border">
+                        <span class="feature-icon">🌟</span>
+                        <h3 class="feature-title">优质体验</h3>
+                        <p class="feature-description">
+                            赛博朋克风格的设计界面，沉浸式的学习体验，让枯燥的会计学习变得充满科技感和趣味性。
+                        </p>
+                    </div>
+
+                    <div class="feature-card glass-container neon-border">
+                        <span class="feature-icon">🏆</span>
+                        <h3 class="feature-title">成功保障</h3>
+                        <p class="feature-description">
+                            完善的学习支持体系和高通过率，已帮助数千名学员成功通过CPA考试，实现职业发展目标。
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 数据统计 -->
+            <section class="stats-section">
+                <h2 class="section-title">平台数据</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">10,000+</div>
+                        <div class="stat-label">注册学员</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">通过率</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">课程视频</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">在线支持</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 发展历程 -->
+            <section class="timeline-section">
+                <h2 class="section-title">发展历程</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2020年</div>
+                            <h3 class="timeline-title">平台创立</h3>
+                            <p class="timeline-description">
+                                CPA学习平台正式成立，开始为考生提供专业的在线学习服务。
+                            </p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2021年</div>
+                            <h3 class="timeline-title">技术升级</h3>
+                            <p class="timeline-description">
+                                引入AI学习算法，实现个性化学习路径推荐，提升学习效果。
+                            </p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2022年</div>
+                            <h3 class="timeline-title">内容扩展</h3>
+                            <p class="timeline-description">
+                                课程内容全面升级，涵盖CPA考试所有科目，新增实战案例分析。
+                            </p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2023年</div>
+                            <h3 class="timeline-title">体验革新</h3>
+                            <p class="timeline-description">
+                                推出赛博朋克风格的新界面，结合闪卡系统，打造沉浸式学习体验。
+                            </p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2024年</div>
+                            <h3 class="timeline-title">生态完善</h3>
+                            <p class="timeline-description">
+                                建立完整的学习生态，包括社区交流、直播课程、模拟考试等功能。
+                            </p>
+                        </div>
+                        <div class="timeline-dot"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 行动号召 -->
+            <section class="cta-section">
+                <h2 class="cta-title">开启您的CPA学习之旅</h2>
+                <p class="cta-description">
+                    加入我们，体验最前沿的CPA学习方式，让您的职业梦想成真。
+                </p>
+                <div class="button-group">
+                    <a href="{{ url_for('cpa_learning') }}" class="btn btn-neon btn-large">
+                        <i class="fas fa-rocket"></i> 立即开始学习
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-glass btn-large">
+                        <i class="fas fa-comments"></i> 联系我们
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // 统计数字动画
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const finalText = stat.textContent;
+                const hasPlus = finalText.includes('+');
+                const hasPercent = finalText.includes('%');
+                const hasSlash = finalText.includes('/');
+                let finalNumber = parseInt(finalText.replace(/\D/g, ''));
+
+                if (finalNumber) {
+                    let currentNumber = 0;
+                    const increment = finalNumber / 50;
+                    const timer = setInterval(() => {
+                        currentNumber += increment;
+                        if (currentNumber >= finalNumber) {
+                            currentNumber = finalNumber;
+                            clearInterval(timer);
+                        }
+
+                        let displayText = Math.floor(currentNumber).toString();
+                        if (hasPlus) displayText += '+';
+                        if (hasPercent) displayText += '%';
+                        if (hasSlash) displayText = finalText; // For "24/7" display as is
+
+                        stat.textContent = displayText;
+                    }, 30);
+                }
+            });
+
+            // 时间线动画
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateX(0)';
+                    }
+                });
+            });
+
+            timelineItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-50px)';
+                item.style.transition = 'all 0.8s ease';
+                observer.observe(item);
+            });
+        });
+
+        // 鼠标跟随效果
+        document.addEventListener('mousemove', function(e) {
+            const cards = document.querySelectorAll('.neon-border');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const angleX = (y - centerY) / 20;
+                    const angleY = (centerX - x) / 20;
+
+                    card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+                } else {
+                    card.style.transform = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

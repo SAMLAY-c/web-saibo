@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CPA学习平台 - 未来感学习体验{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cyberpunk.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+            background: var(--gradient-neon-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.6); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 12px;
+        }
+
+        .features-section {
+            padding: 4rem 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .welcome-message {
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="glass-container neon-border">
+                <a href="{{ url_for('home') }}" class="active">
+                    <i class="fas fa-home"></i> 首页
+                </a>
+                <a href="{{ url_for('cpa_learning') }}">
+                    <i class="fas fa-graduation-cap"></i> CPA学习
+                </a>
+                <a href="{{ url_for('flashcards') }}">
+                    <i class="fas fa-clone"></i> 知识闪卡
+                </a>
+                <a href="{{ url_for('about') }}">
+                    <i class="fas fa-info-circle"></i> 关于
+                </a>
+                <a href="{{ url_for('upload_file') }}">
+                    <i class="fas fa-upload"></i> 文件上传
+                </a>
+                <a href="{{ url_for('contact') }}">
+                    <i class="fas fa-envelope"></i> 联系我们
+                </a>
+                <a href="{{ url_for('ajax_demo') }}">
+                    <i class="fas fa-rocket"></i> AJAX演示
+                </a>
+                {% if session.username %}
+                    <a href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> 注销
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- 消息闪现区域 -->
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-{{ category }} glass-container">
+                <div class="flash-message">
+                  <span>{{ message }}</span>
+                  <button class="flash-close" onclick="this.parentElement.parentElement.style.display='none'">&times;</button>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="main-container">
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            {% if username %}
+                <div class="welcome-message glass-container">
+                    <h1 style="font-size: 2rem; margin-bottom: 1rem;">
+                        <i class="fas fa-user-circle"></i> 欢迎回来，{{ username }}！
+                    </h1>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem;">
+                        很高兴再次见到您。您已成功登录，开始您的学习之旅吧！
+                    </p>
+                </div>
+            {% endif %}
+
+            <h1 class="hero-title">CPA学习平台</h1>
+            <p class="hero-subtitle">
+                体验未来感的学习方式，通过赛博朋克风格的设计让CPA学习更加沉浸和高效
+            </p>
+
+            <div class="cta-buttons">
+                <a href="{{ url_for('cpa_learning') }}" class="btn btn-neon btn-large">
+                    <i class="fas fa-graduation-cap"></i> 开始学习
+                </a>
+                <a href="{{ url_for('flashcards') }}" class="btn btn-glass btn-large">
+                    <i class="fas fa-clone"></i> 知识闪卡
+                </a>
+                {% if not username %}
+                    <a href="{{ url_for('login') }}" class="btn btn-glass btn-large">
+                        <i class="fas fa-sign-in-alt"></i> 立即登录
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- 功能特色 -->
+        <section class="features-section">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;" class="neon-text">
+                平台特色
+            </h2>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 3rem;">
+                结合现代设计与高效学习工具，为您提供最佳的学习体验
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card glass-container neon-border">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="neon-text">CPA科目系统</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        涵盖会计、审计、财务成本管理、经济法四大核心科目，系统化学习路径
+                    </p>
+                </div>
+
+                <div class="feature-card glass-container neon-border">
+                    <span class="feature-icon">🎴</span>
+                    <h3 class="neon-text">智能闪卡</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        交互式知识点闪卡，支持翻转、滑动、难度调节等多种学习模式
+                    </p>
+                </div>
+
+                <div class="feature-card glass-container neon-border">
+                    <span class="feature-icon">📈</span>
+                    <h3 class="neon-text">进度追踪</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        实时监控学习进度，智能分析学习效果，个性化推荐学习计划
+                    </p>
+                </div>
+
+                <div class="feature-card glass-container neon-border">
+                    <span class="feature-icon">🎨</span>
+                    <h3 class="neon-text">未来感设计</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        赛博朋克玻璃质感界面，沉浸式学习体验，让学习充满科技感
+                    </p>
+                </div>
+
+                <div class="feature-card glass-container neon-border">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="neon-text">高效学习</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        基于认知科学的学习方法，提高记忆效率，缩短备考时间
+                    </p>
+                </div>
+
+                <div class="feature-card glass-container neon-border">
+                    <span class="feature-icon">🔒</span>
+                    <h3 class="neon-text">安全可靠</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        用户数据加密存储，学习记录云端同步，随时随地继续学习
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 其他功能链接 -->
+        <section style="text-align: center; padding: 3rem 0;">
+            <h3 style="font-size: 2rem; margin-bottom: 2rem;" class="neon-text">更多功能</h3>
+            <div class="button-group">
+                <a href="{{ url_for('about') }}" class="btn btn-glass">
+                    <i class="fas fa-info-circle"></i> 关于平台
+                </a>
+                <a href="{{ url_for('upload_file') }}" class="btn btn-glass">
+                    <i class="fas fa-upload"></i> 文件上传
+                </a>
+                <a href="{{ url_for('contact') }}" class="btn btn-glass">
+                    <i class="fas fa-envelope"></i> 联系我们
+                </a>
+                <a href="{{ url_for('ajax_demo') }}" class="btn btn-glass">
+                    <i class="fas fa-rocket"></i> 技术演示
+                </a>
+                <a href="{{ url_for('messages') }}" class="btn btn-glass">
+                    <i class="fas fa-comments"></i> 消息中心
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // 欢迎消息动画
+            const welcomeMessage = document.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.style.opacity = '0';
+                setTimeout(() => {
+                    welcomeMessage.style.transition = 'opacity 0.8s ease';
+                    welcomeMessage.style.opacity = '1';
+                }, 500);
+            }
+        });
+
+        // 鼠标跟随光效
+        document.addEventListener('mousemove', function(e) {
+            const heroTitle = document.querySelector('.hero-title');
+            if (heroTitle) {
+                const rect = heroTitle.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const angleX = (y - centerY) / 30;
+                const angleY = (centerX - x) / 30;
+
+                heroTitle.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+            }
+        });
+    </script>
+</body>
+</html>

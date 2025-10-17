@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CPA学习中心{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cyberpunk.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 页面特定动画 */
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.6); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--glass-blur));
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 600;
+            background: var(--gradient-neon-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .subject-progress {
+            margin-top: 1rem;
+        }
+
+        /* 学习路径样式 */
+        .learning-path {
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .path-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .path-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .path-node {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-neon-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-weight: 600;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .path-node:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-neon);
+        }
+
+        .path-line {
+            width: 80px;
+            height: 2px;
+            background: var(--gradient-neon-primary);
+            opacity: 0.5;
+        }
+
+        /* 悬浮操作按钮 */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-neon-primary);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--shadow-neon);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-primary);
+            font-size: 1.5rem;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .path-container {
+                flex-direction: column;
+            }
+
+            .path-line {
+                width: 2px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <nav>
+            <div class="glass-container neon-border">
+                <a href="{{ url_for('home') }}">
+                    <i class="fas fa-home"></i> 首页
+                </a>
+                <a href="{{ url_for('cpa_learning') }}" class="active">
+                    <i class="fas fa-graduation-cap"></i> CPA学习
+                </a>
+                <a href="{{ url_for('flashcards') }}">
+                    <i class="fas fa-clone"></i> 知识闪卡
+                </a>
+                <a href="{{ url_for('about') }}">
+                    <i class="fas fa-info-circle"></i> 关于
+                </a>
+                {% if session.username %}
+                    <a href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i> 注销
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- 消息闪现区域 -->
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-{{ category }} glass-container">
+                <div class="flash-message">
+                  <span>{{ message }}</span>
+                  <button class="flash-close" onclick="this.parentElement.parentElement.style.display='none'">&times;</button>
+                </div>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- 主要内容 -->
+    <main class="main-container page-transition">
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <h1 class="hero-title neon-text">CPA学习中心</h1>
+            <p class="hero-subtitle">开启您的专业注册会计师学习之旅</p>
+
+            <!-- 统计数据 -->
+            <div class="stats-container">
+                <div class="stat-card glass-container">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">核心科目</div>
+                </div>
+                <div class="stat-card glass-container">
+                    <div class="stat-number">68%</div>
+                    <div class="stat-label">总体进度</div>
+                </div>
+                <div class="stat-card glass-container">
+                    <div class="stat-number">156</div>
+                    <div class="stat-label">已完成知识点</div>
+                </div>
+                <div class="stat-card glass-container">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">学习天数</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CPA科目卡片 -->
+        <section class="subject-cards">
+            <div class="subject-card glass-container neon-border" onclick="startSubject('accounting')">
+                <span class="subject-icon">📊</span>
+                <h3 class="subject-title neon-text">会计</h3>
+                <p class="subject-description">掌握会计基本原理、财务报表编制和分析技巧</p>
+                <div class="subject-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                    <div class="progress-text">进度: 75%</div>
+                </div>
+            </div>
+
+            <div class="subject-card glass-container neon-border" onclick="startSubject('audit')">
+                <span class="subject-icon">🔍</span>
+                <h3 class="subject-title neon-text">审计</h3>
+                <p class="subject-description">学习审计程序、内部控制和风险评估方法</p>
+                <div class="subject-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%"></div>
+                    </div>
+                    <div class="progress-text">进度: 60%</div>
+                </div>
+            </div>
+
+            <div class="subject-card glass-container neon-border" onclick="startSubject('finance')">
+                <span class="subject-icon">💰</span>
+                <h3 class="subject-title neon-text">财务成本管理</h3>
+                <p class="subject-description">深入理解财务管理、成本控制和投资决策</p>
+                <div class="subject-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 82%"></div>
+                    </div>
+                    <div class="progress-text">进度: 82%</div>
+                </div>
+            </div>
+
+            <div class="subject-card glass-container neon-border" onclick="startSubject('law')">
+                <span class="subject-icon">⚖️</span>
+                <h3 class="subject-title neon-text">经济法</h3>
+                <p class="subject-description">掌握相关经济法律法规和合规要求</p>
+                <div class="subject-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 55%"></div>
+                    </div>
+                    <div class="progress-text">进度: 55%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 学习路径 -->
+        <section class="learning-path">
+            <h2 class="path-title">推荐学习路径</h2>
+            <div class="path-container glass-container" style="padding: 2rem; border-radius: 16px;">
+                <div class="path-node" title="基础会计">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="path-line"></div>
+                <div class="path-node" title="中级会计">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="path-line"></div>
+                <div class="path-node" title="高级会计">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="path-line"></div>
+                <div class="path-node" title="审计实务">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="path-line"></div>
+                <div class="path-node" title="综合案例">
+                    <i class="fas fa-trophy"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- 快速操作按钮 -->
+        <div class="button-group">
+            <button class="btn btn-neon" onclick="startQuickPractice()">
+                <i class="fas fa-bolt"></i> 快速练习
+            </button>
+            <button class="btn btn-glass" onclick="viewProgress()">
+                <i class="fas fa-chart-bar"></i> 查看进度
+            </button>
+            <button class="btn btn-glass" onclick="studyPlan()">
+                <i class="fas fa-calendar-alt"></i> 学习计划
+            </button>
+        </div>
+    </main>
+
+    <!-- 悬浮操作按钮 -->
+    <button class="fab" onclick="goToFlashcards()">
+        <i class="fas fa-clone"></i>
+    </button>
+
+    <script>
+        // 页面交互逻辑
+        function startSubject(subject) {
+            const subjectNames = {
+                'accounting': '会计',
+                'audit': '审计',
+                'finance': '财务成本管理',
+                'law': '经济法'
+            };
+
+            // 添加点击动画
+            event.currentTarget.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                event.currentTarget.style.transform = '';
+                // 跳转到知识点闪卡页面
+                window.location.href = `{{ url_for('flashcards') }}?subject=${subject}`;
+            }, 200);
+        }
+
+        function startQuickPractice() {
+            // 随机选择题目进行快速练习
+            const subjects = ['accounting', 'audit', 'finance', 'law'];
+            const randomSubject = subjects[Math.floor(Math.random() * subjects.length)];
+            window.location.href = `{{ url_for('flashcards') }}?subject=${randomSubject}&mode=practice`;
+        }
+
+        function viewProgress() {
+            // 显示进度详情
+            alert('详细进度分析功能正在开发中...');
+        }
+
+        function studyPlan() {
+            // 显示学习计划
+            alert('个性化学习计划功能正在开发中...');
+        }
+
+        function goToFlashcards() {
+            window.location.href = '{{ url_for("flashcards") }}';
+        }
+
+        // 页面加载动画
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.subject-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // 进度条动画
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            });
+        });
+
+        // 鼠标跟随光效
+        document.addEventListener('mousemove', function(e) {
+            const cards = document.querySelectorAll('.neon-border');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

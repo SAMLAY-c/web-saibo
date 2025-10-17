@@ -75,6 +75,8 @@
         <h1>{% block header_title %}Flask Web 应用{% endblock %}</h1>
         <nav>
             <a href="{{ url_for('home') }}">主页</a>
+            <a href="{{ url_for('cpa_learning') }}">🎓 CPA学习</a>
+            <a href="{{ url_for('flashcards') }}">📚 知识闪卡</a>
             <a href="{{ url_for('about') }}">关于我</a>
             <a href="{{ url_for('upload_file') }}">📁 文件上传</a>
             <a href="{{ url_for('contact') }}">📧 联系我们</a>
